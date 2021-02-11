@@ -1,0 +1,2 @@
+C:\Users\dkemo\source\repos\BigInt\x64\Debug\BigInt.exe
+C:\Users\dkemo\source\repos\BigInt\x64\Debug\BigInt.pdb
