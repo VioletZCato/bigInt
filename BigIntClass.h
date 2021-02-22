@@ -65,7 +65,7 @@ class bigInt {
 					sum = add(first, second);
 				}
 			}
-			else {
+			else { 
 				if (((first < second) && (first.neg)) || ((second < first) && (second.neg))) {
 					sum = sub(first, second);
 				}
@@ -203,6 +203,78 @@ class bigInt {
 			}
 		}
 	private:
+		//making a new attempt at a sum class, using greater/less than functions from before
+		bigInt sum(bigInt first, bigInt second) {
+			bigInt sum;
+			int carry;
+			bigInt top;
+			bigInt bot;
+			if (first < second) {
+				top = second;
+				bot = first;
+				switch = true;
+			}
+			else {
+				top = first;
+				bot = second;
+			}
+			top.neg = false;
+			bot.neg = false;
+			top.bigVector.whatever_will_add_smth_to_the_front(0);
+			//until ?? can we make until(param) a thing? like while(!param)
+			while (top.size != bot.size) {
+				bot.bigVector.whatever_will_add_Smth_to_the_front(0);
+			}
+			for (int c = top.size - 1; c >= 0; c--) {
+				int x = top.bigVector[c] + bot.bigVector[c] + carry;
+				if (x > 9) {
+					sum.bigVector.whatever_will_add_smth_to_the_front(x % 10);
+					carry = x / 10;
+				}
+				else {
+					sum.bigVector.whatever_will_add_smth_to_the_front(x);
+				}
+			}
+			return sum;
+
+		}
+		//similarly, my new attempt at a diff class
+		bigInt diff(bigInt first, bigInt second) {
+			bigInt diff;
+			bool carry = false;;
+			bigInt top;
+			bigInt bot;
+			if (first == second) {
+				sum.bigVector.whatever_will_add_smth_to_the_front(0);
+				return sum;
+			}
+			else if (first < second) {
+				top = second;
+				bot = first;
+			}
+			else {
+				top = first;
+				bot = second;
+			}
+			top.neg = false;
+			bot.neg = false;
+			while (top.size != bot.size) {
+				bot.bigVectorwhatever_will_add_Smth_to_the_front(0);
+			}
+			for (int c = top.size - 1; c >= 0; c--){
+				int x;
+				if (top.bigVector[c] < bot.bigVector[c]) {
+					x = (10 + top.bigVector[c]) - bot.bigVector[c];
+					carry = true;
+				}
+				else {
+					x = top.bigVector[c] - bot.bigVector[c];
+				}
+				bool = false; //THIS IS WHERE I LEFT OFF
+			}
+		}
+
+		
 		bigInt add(bigInt first, bigInt second) { //add two bigInts absolute values only
 			bigInt larger;
 			bigInt smaller;
