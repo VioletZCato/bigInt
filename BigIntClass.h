@@ -17,10 +17,10 @@ class bigInt {
 		}
 		bigInt(int integer) { //integer constructor
 			while (integer >= 10) {
-				bigVector.whatever_will_add_smth_to_the_front(integer % 10);
+				bigVector.push_front(integer % 10);
 				integer /= 10;
 			}
-			bigVector.whatever_will_add_smth_to_the_front(integer);
+			bigVector.push_front(integer);
 			if (integer < 0) {
 				neg = true;
 			}
@@ -31,10 +31,10 @@ class bigInt {
 		bigInt(string str) { //string constructor
 			int integer = stoi(str);
 			while (integer >= 10) {
-				bigVector.whatever_will_add_smth_to_the_front(integer % 10);
+				bigVector.push_front(integer % 10);
 				integer /= 10;
 			}
-			bigVector.whatever_will_add_smth_to_the_front(integer);
+			bigVector.push_front(integer);
 			if (integer < 0) {
 				neg = true;
 			}
@@ -42,7 +42,7 @@ class bigInt {
 				neg = false;
 			}
 		}
-		int toInt(bigInt bigint) {
+		int toInt(bigInt bigint) { //takes a bigInt and returns an int of equivalent value
 			int val = 0;
 			int exp = 0;
 			for (int c = bigint.size; c >= 0; c--) {
@@ -54,51 +54,54 @@ class bigInt {
 			}
 			return val;
 		}
-		bigInt addition(bigInt first, bigInt second) { //add two bigInts
-			bigInt sum;
+		string toString(bigInt bigint) {
+			return to_string(toInt(bigint));
+		}
+		bigInt addition(bigInt first, bigInt second) { //adds two bigInts together, needs overload for +
+			bigInt ans;
 			if (first.neg == second.neg) {
 				if (first.neg) {
-					sum = add(first, second);
-					sum.neg = true;
+					ans = sum(first, second);
+					ans.neg = true;
 				}
 				else {
-					sum = add(first, second);
+					ans = sum(first, second);
 				}
 			}
 			else { 
-				if (((first < second) && (first.neg)) || ((second < first) && (second.neg))) {
-					sum = sub(first, second);
+				if (((|first| < |second|) && (first.neg)) || ((|second| < first) && (second.neg))) {
+					ans = dif(first, second);
 				}
 				else {
-					sum = sub(first, second);
-					sum.neg = true;
+					ans = dif(first, second);
+					ans.neg = true;
 				}
 			}
-			return sum;
+			return ans;
 		}
-		bigInt subtraction(bigInt first, bigInt second) { //subtract bigInts
-			bigInt dif;
+		bigInt subtraction(bigInt first, bigInt second) { //subtracts bigInts, needs overload for -
+			bigInt ans;
 			if (first.neg != second.neg) {
 				if (second.neg) {
-					dif = add(first, second);
+					ans = sum(first, second);
 				}
 				else {
-					dif = add(first, second);
-					dif.neg = true;
+					ans = sum(first, second);
+					ans.neg = true;
 				}
 			}
 			else {
 				if (((!first.neg) && (first > second)) || (second.neg) && (first < second)) {
-					dif = sub(first, second);
+					ans = dif(first, second);
 				}
 				else {
-					dif = sub(first, second);
-					dif.neg = true;
+					ans = dif(first, second);
+					ans.neg = true;
 				}
 			}
-			return dif;
+			return ans;
 		}
-		bigInt multiplication(bigInt first, bigInt second) {
+		bigInt multiplication(bigInt first, bigInt second) { //multiplies two bigints, needs overload for *
 			bigInt prd;
 			bigInt factor = second;
 			factor.neg = false;
@@ -110,28 +113,103 @@ class bigInt {
 			return prd;
 			
 		}
-		bigInt pow(bigInt first, bigInt second) {
+		bigInt mulitplicationByInt(bigInt bigint, int i) { //multiplies one bigint by an int, should share * operator
+			//this could also be done by calling bigInt multiplication and passing a the bigint with a call to the int-->bigint method
+			bigInt prd;
+			int factor = abs(i);
+			for (int c = 0; c < factor; c++) {
+				prd += bigint;
+			}
+			if (((bigint.neg) && (i < 0)) || ((!bigint.neg) && (i > -1))) {
+				prd.neg = true;
+			}
+			else {
+				prd.neg = false;
+			}
+			return prd;
+		}
+		bigInt division(bigInt first, bigInt second) { //divides two bigints, needs overload for /
+			bigInt quo;
+			bigInt dvd = first;
+			dvd.neg = false;
+			bigInt dvr = second;
+			dvr.neg = false;
+			
+		}
+		bigInt divisionbyInt(bigInt bigint, int i) { //divides a bigint by an int, should share / operator
+			bigInt quo;
+			bigInt dvd = bigint;
+			dvd.neg = false;
+			int dvr = abs(i);
+
+		}
+		bigInt divisionForInt(int i, bigInt bigint) { //divides an int by a bigint, should share / operator
+			bigInt quo;
+			int dvd = abs(i);
+			bigInt dvr;
+			dvr.neg = false;
+		}
+		bigInt pow(bigInt first, bigInt second) { //raises a bigint to the exponent of another, pow methods probably don't need overload, because they probably don't use ^
 			bigInt pwr = first;
 			bigInt exp = second;
 			exp.neg = false;
-			if (exp == 0) { return 1; }
+			bigInt one = bigInt(1);
+			bigInt zero;
+			one.push_front(1);
+			if (exp == 0) { return one; }
 			else if (exp == 1) { return first; }
 			else {
 				for (int c = 2; c <= exp; c++) {
-					pwr = multiplication(pwr, first);
+					pwr *= first;
 				}
 			}
-			bigInt one = bigInt(1);
 			if (second.neg) {
-				if (toInt(pwr) == 1) { return one; }
-				else { 
-					bigInt zero = bigInt(0);
-					return zero;
-				}
+				return zero;
 			}
 			
 		}
-		bool equal(bigInt first, bigInt second) {
+		bigInt powByInt(bigInt bigint, int i) {  //raises a bigint to the exponent of an int
+			bigInt pwr = bigint;
+			int exp = abs(i);
+			bigInt one = bigInt(1);
+			bigInt zero;
+			if (exp == 0) { return one; }
+			else if (abs(exp) == 1) { return bigint; }
+			else {
+				for (int c = 2; c < exp; c++) {
+					pwr *= bigint;
+				}
+			}
+			if (i < 0) {
+				return zero;
+			}
+		}
+		bigInt powForInt(int i, bigInt bigint) { //raises an int to the exponent of a bigint
+			int pwr = i;
+			int exp = bigint;
+			exp.neg = false;
+			bigInt one = bigInt(1);
+			bigInt zero;
+			if (exp == zero) { return 1; }
+			else if (exp == one) { return i; }
+			else {
+				for (int c = 2; c < toInt(exp); c++) {
+					pwr *= pwr;
+				}
+			}
+			if (bigint.neg) {
+				return 0;
+			}
+		}
+		void print(bigInt bigint) { //prints a bigint, without converting to any other data type first
+			if (bigint.neg) {
+				print('-');
+			}
+			for (int c = 0; c < bigint.size; c++) {
+				print(bigint[c]);
+			}
+		}
+		bool equal(bigInt first, bigInt second) { //determines whether two bigints are equal, needs overload for ==
 			if (first.size != second.size) {
 				return false;
 			}
@@ -144,7 +222,7 @@ class bigInt {
 				return true;
 			}
 		}
-		bool greater(bigInt first, bigInt second) { //comparative, is first > second 
+		bool greater(bigInt first, bigInt second) { //determines whether a bigint is greater than another, needs overload for >
 			if (first.size != second.size) {
 				if (first.size > second.size) {
 					return true;
@@ -165,7 +243,7 @@ class bigInt {
 				return false;
 			}
 		}
-		bool greater_equal(bigInt first, bigInt second) {
+		bool greater_equal(bigInt first, bigInt second) { //combination of greater and equal functions, may not be necessary, but may need overload for >=
 			if (first.size != second.size) {
 				if (first.size > second.size) {
 					return true;
@@ -186,7 +264,7 @@ class bigInt {
 				return true;
 			}
 		}
-		bool lesser(bigInt first, bigInt second) { //comparative
+		bool lesser(bigInt first, bigInt second) { //just an inverse of the greater than method, needs overload for <
 			if (!(first >= second)) {
 				return true;
 			}
@@ -194,7 +272,7 @@ class bigInt {
 				return false;
 			}
 		}
-		bool lesser_equal(bigInt first, bigInt second) {
+		bool lesser_equal(bigInt first, bigInt second) { //combination of equal and lesser methods, may need overload for <=
 			if (!(first > second)) {
 				return true;
 			}
@@ -203,9 +281,9 @@ class bigInt {
 			}
 		}
 	private:
-		//making a new attempt at a sum class, using greater/less than functions from before
+		//sum method will return the positive sum of two bigInts - used in the addition and subtraction functions
 		bigInt sum(bigInt first, bigInt second) {
-			bigInt sum;
+			bigInt summation;
 			int carry;
 			bigInt top;
 			bigInt bot;
@@ -220,33 +298,33 @@ class bigInt {
 			}
 			top.neg = false;
 			bot.neg = false;
-			top.bigVector.whatever_will_add_smth_to_the_front(0);
+			top.bigVector.push_front(0);
 			//until ?? can we make until(param) a thing? like while(!param)
 			while (top.size != bot.size) {
-				bot.bigVector.whatever_will_add_Smth_to_the_front(0);
+				bot.bigVector.push_front(0);
 			}
 			for (int c = top.size - 1; c >= 0; c--) {
 				int x = top.bigVector[c] + bot.bigVector[c] + carry;
 				if (x > 9) {
-					sum.bigVector.whatever_will_add_smth_to_the_front(x % 10);
+					summation.bigVector.push_front(x % 10);
 					carry = x / 10;
 				}
 				else {
-					sum.bigVector.whatever_will_add_smth_to_the_front(x);
+					summation.bigVector.push_front(x);
 				}
 			}
-			return sum;
+			return summation;
 
 		}
-		//similarly, my new attempt at a diff class
-		bigInt diff(bigInt first, bigInt second) {
-			bigInt diff;
+		//dif fucntion will return the positive difference of two bigInts - used in the addition and subtraction functions
+		bigInt dif(bigInt first, bigInt second) {
+			bigInt difference;
 			bool carry = false;;
 			bigInt top;
 			bigInt bot;
 			if (first == second) {
-				sum.bigVector.whatever_will_add_smth_to_the_front(0);
-				return sum;
+				difference.bigVector.push_front(0);
+				return difference;
 			}
 			else if (first < second) {
 				top = second;
@@ -259,61 +337,25 @@ class bigInt {
 			top.neg = false;
 			bot.neg = false;
 			while (top.size != bot.size) {
-				bot.bigVectorwhatever_will_add_Smth_to_the_front(0);
+				bot.bigVector.push_front(0);
 			}
 			for (int c = top.size - 1; c >= 0; c--){
 				int x;
-				if (top.bigVector[c] < bot.bigVector[c]) {
-					x = (10 + top.bigVector[c]) - bot.bigVector[c];
-					carry = true;
+				if (carry) {
+					x = (top.bigVector[c] - 1) - bot.bigVector[c];
 				}
 				else {
 					x = top.bigVector[c] - bot.bigVector[c];
 				}
-				bool = false; //THIS IS WHERE I LEFT OFF
-			}
-		}
-
-		
-		bigInt add(bigInt first, bigInt second) { //add two bigInts absolute values only
-			bigInt larger;
-			bigInt smaller;
-			bigInt sum;
-			int carry = 0;
-			if (max(first.size, second.size) == first.size) {
-				larger = first;
-				smaller = second;
-			}
-			else {
-				larger = second;
-				smaller = first;
-			}
-			smaller.neg = false;
-			larger.neg = false;
-			if (larger.size == smaller.size) { larger.whatever_will_add_smth_to_the_front(0); }
-			for (int c = smaller.size - 1; c >= 0; c--) { //this only goes to smaller.size, so add something to just smoosh the rest on there
-				int temp = carry + smaller.bigVector[c] + larger.bigVector[c];
-				carry = 0;
-				sum.whatever_will_add_smth_to_the_front(temp % 10); //emplace not working ksdfnkjsdnfkjnsdkfnjsknd
-				carry = temp / 10;
-			}
-			for (int c = larger.size - smaller.size; c >= 0; c--) {
-				if (c == smaller.size) {
-					sum.whatever_will_add_smth_to_the_front(carry + larger.bigVector[c]);
+				carry = false;
+				if (x < 0) {
+					x = (10 + top.bigVector[c]) - bot.bigVector[c];
+					carry = true;
 				}
-				sum.whatever_will_add_smth_to_the_front(larger.bigVector[c]);
+				difference.bigVector.push_front(x);
 			}
-			return sum;
+			return difference;
 		}
-		bigInt sub(bigInt first, bigInt second) { //subtract two bigInts absolute values only
-			//stuff
-		}
-
-
-
-
-
-
 		/*
 		*bigInt operator+(const bigInt&); //overloading operator, so + can be used to call bigInt add
 		*same thing for subtraction(-), division(/)
