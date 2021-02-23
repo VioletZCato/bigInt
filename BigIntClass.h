@@ -1,7 +1,8 @@
 #pragma once
-#include <String>
+#include <string>
 #include <cmath>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -186,7 +187,7 @@ class bigInt {
 		}
 		bigInt powForInt(int i, bigInt bigint) { //raises an int to the exponent of a bigint
 			int pwr = i;
-			int exp = bigint;
+			bigInt  exp = bigint;
 			exp.neg = false;
 			bigInt one = bigInt(1);
 			bigInt zero;
@@ -203,10 +204,10 @@ class bigInt {
 		}
 		void print(bigInt bigint) { //prints a bigint, without converting to any other data type first
 			if (bigint.neg) {
-				print('-');
+				cout << '-';
 			}
 			for (int c = 0; c < bigint.size; c++) {
-				print(bigint[c]);
+				cout << bigint[c];
 			}
 		}
 		bool equal(bigInt first, bigInt second) { //determines whether two bigints are equal, needs overload for ==
